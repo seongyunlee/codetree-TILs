@@ -38,10 +38,12 @@ def interAction(Sidx,Dir):
     nr,nc = r+dr,c+dc
     if not (0<=nr<N and 0<=nc<N):
         state[Sidx]=-1
+        S[Sidx] = [-1,-1]
     else:
         if [nr,nc] in S:
+            bak = S.index([nr,nc])
             S[Sidx] = [nr,nc]
-            interAction(S.index([nr,nc]),Dir)
+            interAction(bak,Dir)
         else:S[Sidx] = [nr,nc]
 def collision(Sidx,getS,Dir):
     global turn
@@ -51,6 +53,7 @@ def collision(Sidx,getS,Dir):
     nc += getS*Dir[1]
     if not (0<=nr<N and 0<=nc<N):
         state[Sidx] = -1
+        S[Sidx] = [-1,-1]
     elif [nr,nc] in S:
         S[Sidx] = [nr,nc]
         interAction(S.index([nr,nc]),Dir)
