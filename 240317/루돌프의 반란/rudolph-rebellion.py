@@ -10,10 +10,10 @@ def dis(r1,c1,r2,c2):
     return (r1-r2)**2 + (c1-c2)**2
 def pickSanta():
     global rR,rC
-    return min([[dis(rR,rC,S[i][0],S[i][1]),-S[i][0],i] for i in range(P) if state[i]!=-1])
+    return min([[dis(rR,rC,S[i][0],S[i][1]),-S[i][0],-S[i][1],i] for i in range(P) if state[i]!=-1])
 def moveRodolph():
     global rR,rC,turn
-    tar,_,Tidx = pickSanta()
+    tar,_,_,Tidx = pickSanta()
     tr,tc = S[Tidx]
     Nr, Nc = 0, 0
     Dr,Dc = 0,0
@@ -83,10 +83,15 @@ state = [0]*P # -1 탈락, 0 정상, x x에 기절
 score = [0]*P
 turn = 1
 while turn<=M:
-    if all([x==-1 for x in state]):break
     moveRodolph()
+    if all([x==-1 for x in state]):
+        break
     for i in range(P):
         moveSanta(i)
+        if all([x==-1 for x in state]):
+            P = -1
+            M=0
+            break
     for i in range(P):
         if state[i]!=-1:
             score[i]+=1
