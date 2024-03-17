@@ -12,13 +12,13 @@ def pickSanta():
     global rR,rC
     return min([[dis(rR,rC,S[i][0],S[i][1]),-S[i][0],i] for i in range(P) if state[i]!=-1])
 def moveRodolph():
-    global rR,rC
+    global rR,rC,turn
     tar,_,Tidx = pickSanta()
     tr,tc = S[Tidx]
     Nr, Nc = 0, 0
     Dr,Dc = 0,0
     Dis = 1000000000
-    move = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[-1,1]]
+    move = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
     for i in range(8):
         dr, dc = move[i]
         nr,nc = rR+dr,rC+dc
@@ -30,33 +30,35 @@ def moveRodolph():
             Dr,Dc = dr,dc
     rR, rC = Nr,Nc
     if [rR,rC] == [tr,tc] :
-        collision(Tidx, C,C,[Dr,Dc])
+        state[Tidx] = turn + 1
+        collision(Tidx, C,[Dr,Dc])
 def interAction(Sidx,Dir):
     r, c = S[Sidx]
     dr, dc = Dir
     nr,nc = r+dr,c+dc
     if not (0<=nr<N and 0<=nc<N):
-        state[Sidx]=2
+        state[Sidx]=-1
     else:
         if [nr,nc] in S:
             S[Sidx] = [nr,nc]
-            interAction(Sidx,Dir)
+            interAction(S.index([nr,nc]),Dir)
         else:S[Sidx] = [nr,nc]
-def collision(Sidx,getS,getD,Dir):
+def collision(Sidx,getS,Dir):
+    global turn
     score[Sidx] += getS
     nr,nc = S[Sidx]
-    nr += getD*Dir[0]
-    nc += getD*Dir[1]
+    nr += getS*Dir[0]
+    nc += getS*Dir[1]
     if not (0<=nr<N and 0<=nc<N):
         state[Sidx] = -1
     elif [nr,nc] in S:
         S[Sidx] = [nr,nc]
-        interAction(Sidx,Dir)
+        interAction(S.index([nr,nc]),Dir)
     else: S[Sidx] = [nr,nc]
 def moveSanta(Sidx):
     global rR,rC,turn
     if state[Sidx]==-1:return
-    if state[Sidx]>turn-1:return
+    if state[Sidx]>=turn:return
     r,c = S[Sidx]
     Nr, Nc = 0, 0
     Dr,Dc = 0,0
@@ -75,11 +77,12 @@ def moveSanta(Sidx):
     if Dis == dis(r,c,rR,rC):return
     S[Sidx] = [Nr,Nc]
     if [rR,rC] == [Nr,Nc] :
-        state[Sidx] = turn
-        collision(Sidx, D,-D,[Dr,Dc])
+        state[Sidx] = turn+1
+        collision(Sidx, D,[-Dr,-Dc])
 state = [0]*P # -1 탈락, 0 정상, x x에 기절
 score = [0]*P
-for turn in range(1,M+1):
+turn = 1
+while turn<=M:
     if all([x==-1 for x in state]):break
     moveRodolph()
     for i in range(P):
@@ -87,5 +90,5 @@ for turn in range(1,M+1):
     for i in range(P):
         if state[i]!=-1:
             score[i]+=1
-    print(S,'score',score,'r',[rR,rC],'state',state)
+    turn+=1
 print(*score)
