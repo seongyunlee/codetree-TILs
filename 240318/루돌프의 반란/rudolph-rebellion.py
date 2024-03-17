@@ -42,8 +42,7 @@ def interAction(Sidx,Dir):
     else:
         if [nr,nc] in S:
             bak = S.index([nr,nc])
-            S[Sidx] = [nr,nc]
-            S[bak] = [-1,-1]
+            S[Sidx] = [-1,-1]
             interAction(bak,Dir)
         else:S[Sidx] = [nr,nc]
 def collision(Sidx,getS,Dir):
