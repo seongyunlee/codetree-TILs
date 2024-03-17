@@ -42,7 +42,7 @@ def interAction(Sidx,Dir):
     else:
         if [nr,nc] in S:
             bak = S.index([nr,nc])
-            S[Sidx] = [-1,-1]
+            S[Sidx] = [nr,nc]
             interAction(bak,Dir)
         else:S[Sidx] = [nr,nc]
 def collision(Sidx,getS,Dir):
@@ -55,8 +55,9 @@ def collision(Sidx,getS,Dir):
         state[Sidx] = -1
         S[Sidx] = [-1,-1]
     elif [nr,nc] in S:
+        bak = S.index([nr,nc])
         S[Sidx] = [nr,nc]
-        interAction(S.index([nr,nc]),Dir)
+        interAction(bak,Dir)
     else: S[Sidx] = [nr,nc]
 def moveSanta(Sidx):
     global rR,rC,turn
