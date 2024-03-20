@@ -67,7 +67,7 @@ def changeParent(a,b):
     update(pa)
     update(pb)
 def query(idx):
-    return sum(S[idx].values())-1
+    return sum(S[idx].values())-(1 if idx!=0 else 0)
 makeInfo(0)
 for _ in range(Q-1):
     M,*args = map(int,input().split())
