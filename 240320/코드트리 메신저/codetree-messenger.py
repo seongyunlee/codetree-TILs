@@ -43,7 +43,7 @@ def makeInfo(idx):
             S[idx][k-1] = v
     elif len(CC)==1:
         for k,v in CC[0].items():
-            if k-1<=0:continue
+            if k-1<0:continue
             S[idx][k-1] = v
     if idx==0:return
     if S[idx].get(authority[idx])==None:
