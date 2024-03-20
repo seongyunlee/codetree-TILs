@@ -8,10 +8,55 @@ for i in range(1,len(parent)):
     child[parent[i]].append(i)
 authority = [None] + K[N+1:]
 alarm = [True]*(N+1)
+S = [{} for _ in range(N+1)]
+def sumDict(a,b):
+    s = dict(a)
+    for k,v in b.items():
+        if k in s:
+            s[k]+=v
+        else:s[k]=v
+    return s
+def update(idx):
+    S[idx] = {}
+    CC = [S[i] for i in child[idx] if alarm[i]]
+    if len(CC)==2:   
+        sumChild = sumDict(*CC) 
+        for k,v in sumChild.items():
+            if k-1<0:continue
+            S[idx][k-1] = v
+    elif len(CC)==1:
+        for k,v in CC[0].items():
+            if k-1<=0:continue
+            S[idx][k-1] = v
+    if idx==0:return
+    if S[idx].get(authority[idx])==None:
+        S[idx][authority[idx]]=1
+    else:
+        S[idx][authority[idx]]+=1
+    if idx!=0:update(parent[idx])
+def makeInfo(idx):
+    CC = [makeInfo(i) for i in child[idx] if alarm[i]]
+    if len(CC)==2:   
+        sumChild = sumDict(*CC) 
+        for k,v in sumChild.items():
+            if k-1<0:continue
+            S[idx][k-1] = v
+    elif len(CC)==1:
+        for k,v in CC[0].items():
+            if k-1<=0:continue
+            S[idx][k-1] = v
+    if idx==0:return
+    if S[idx].get(authority[idx])==None:
+        S[idx][authority[idx]]=1
+    else:
+        S[idx][authority[idx]]+=1
+    return S[idx]
 def toggleAlarm(idx):
     alarm[idx] = not alarm[idx]
+    update(idx)
 def changeAuth(idx,N):
     authority[idx] = N
+    update(idx)
 def changeParent(a,b):
     pb,pa = parent[b],parent[a]
     parent[b], parent[a] = pa,pb
@@ -19,21 +64,11 @@ def changeParent(a,b):
     child[pb].append(a)
     child[pa].remove(a)
     child[pa].append(b)
+    update(pa)
+    update(pb)
 def query(idx):
-    Q = child[idx]
-    cnt = 0
-    depth = 1
-    while Q:
-        nq = []
-        for q in Q:
-            if not alarm[q]:continue
-            if depth<=authority[q]:
-                cnt+=1
-            for qq in child[q]:
-                nq.append(qq)
-        Q = nq
-        depth+=1
-    return cnt
+    return sum(S[idx].values())-1
+makeInfo(0)
 for _ in range(Q-1):
     M,*args = map(int,input().split())
     if M==200:
