@@ -9,6 +9,7 @@ for i in range(1,len(parent)):
 authority = [None] + K[N+1:]
 alarm = [True]*(N+1)
 S = [{} for _ in range(N+1)]
+SS = [0]*(N+1)
 def sumDict(a,b):
     s = dict(a)
     for k,v in b.items():
@@ -29,10 +30,11 @@ def update(idx):
             if k-1<0:continue
             S[idx][k-1] = v
     if idx==0:return
-    if S[idx].get(min(22,authority[idx]))==None:
-        S[idx][min(22,authority[idx])]=1
+    if S[idx].get(min(20,authority[idx]))==None:
+        S[idx][min(20,authority[idx])]=1
     else:
-        S[idx][min(22,authority[idx])]+=1
+        S[idx][min(20,authority[idx])]+=1
+    SS[idx] = query(idx)
     if idx!=0:update(parent[idx])
 def makeInfo(idx):
     CC = [makeInfo(i) for i in child[idx] if alarm[i]]
@@ -45,11 +47,12 @@ def makeInfo(idx):
         for k,v in CC[0].items():
             if k-1<0:continue
             S[idx][k-1] = v
+    SS[idx] = query(idx)
     if idx==0:return
-    if S[idx].get(min(22,authority[idx]))==None:
-        S[idx][min(22,authority[idx])]=1
+    if S[idx].get(min(20,authority[idx]))==None:
+        S[idx][min(20,authority[idx])]=1
     else:
-        S[idx][min(22,authority[idx])]+=1
+        S[idx][min(20,authority[idx])]+=1
     return S[idx]
 def toggleAlarm(idx):
     alarm[idx] = not alarm[idx]
