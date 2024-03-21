@@ -81,4 +81,4 @@ for _ in range(Q-1):
     elif M==400:
         changeParent(*args)
     else:
-        print(query(*args))
+        print(SS[*args])
