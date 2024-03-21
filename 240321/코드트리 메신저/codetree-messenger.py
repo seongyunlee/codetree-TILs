@@ -47,12 +47,14 @@ def makeInfo(idx):
         for k,v in CC[0].items():
             if k-1<0:continue
             S[idx][k-1] = v
-    SS[idx] = query(idx)
-    if idx==0:return
+    if idx==0:
+        SS[idx] = query(idx)
+        return
     if S[idx].get(min(20,authority[idx]))==None:
         S[idx][min(20,authority[idx])]=1
     else:
         S[idx][min(20,authority[idx])]+=1
+    SS[idx] = query(idx)
     return S[idx]
 def toggleAlarm(idx):
     alarm[idx] = not alarm[idx]
@@ -81,4 +83,4 @@ for _ in range(Q-1):
     elif M==400:
         changeParent(*args)
     else:
-        print(SS[*args])
+        print(SS[args[0]])
